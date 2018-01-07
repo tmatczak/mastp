@@ -1,7 +1,5 @@
 package sample;
 
-import com.lynden.gmapsfx.GoogleMapView;
-import com.lynden.gmapsfx.javascript.object.GoogleMap;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -69,7 +67,9 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 Date now = new Date();
-                aem.addAgentToMainContainer(now.toString(), "agents.HelloAgent");
+                Object[] arguments = new Object[1];
+                arguments[0] = mm;
+                aem.addAgentToMainContainer(now.toString(), "agents.RandomLocationAgent", arguments);
             }
         });
     }

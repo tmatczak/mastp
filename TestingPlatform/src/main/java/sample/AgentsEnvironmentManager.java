@@ -23,16 +23,16 @@ public class AgentsEnvironmentManager {
     }
 
     public void addRemoteMonitoringAgent() {
-        addAgentToMainContainer("rma", "jade.tools.rma.rma");
+        addAgentToMainContainer("rma", "jade.tools.rma.rma", new Object[0]);
     }
 
-    public void addAgentToMainContainer(String nickname, String className) {
-        addAgent(nickname, className, mainContainer);
+    public void addAgentToMainContainer(String nickname, String className, Object[] arguments) {
+        addAgent(nickname, className, mainContainer, arguments);
     }
 
-    public void addAgent(String nickname, String className, jade.wrapper.AgentContainer container) {
+    public void addAgent(String nickname, String className, jade.wrapper.AgentContainer container, Object[] arguments) {
         try {
-            AgentController agent = container.createNewAgent(nickname, className, new Object[0]);
+            AgentController agent = container.createNewAgent(nickname, className, arguments);
             agent.start();
         } catch (StaleProxyException e) {
             System.out.println("Agent not created due to stale proxy exception");
