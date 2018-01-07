@@ -69,7 +69,7 @@ public class Main extends Application {
                 Date now = new Date();
                 Object[] arguments = new Object[1];
                 arguments[0] = mm;
-                aem.addAgentToMainContainer(now.toString(), "agents.RandomLocationAgent", arguments);
+                aem.addAgentToMainContainer(now.toString(), "agents.MovingAgent", arguments);
             }
         });
     }
