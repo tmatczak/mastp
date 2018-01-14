@@ -1,24 +1,24 @@
 package sample;
 
+import agents.GUIAgent;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-
-import java.util.Date;
 
 public class Main extends Application {
 
     private AgentsEnvironmentManager aem = new AgentsEnvironmentManager();
     private MapManager mm = new MapManager();
+    private Controller controller;
 
     private HBox mapContainer;
     private Button btnAdd;
@@ -29,8 +29,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("sample.fxml"));
         primaryStage.setTitle("Testing platform");
+
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getClassLoader().getResource("sample.fxml"));
 
         try {
             aem.startContainer();
@@ -39,6 +40,10 @@ public class Main extends Application {
             System.out.println("Agents container failure");
             System.exit(0);
         } finally {
+            controller = new Controller(aem, mm);
+            fxmlLoader.setController(controller);
+            startGuiAgent(aem, mm, controller);
+            SplitPane root = fxmlLoader.load();
             Scene mainScene = new Scene(root, 800, 600);
             root.applyCss();
             setupViews(mainScene);
@@ -47,7 +52,7 @@ public class Main extends Application {
             primaryStage.show();
         }
     }
-    
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -55,6 +60,7 @@ public class Main extends Application {
     private void setupViews(Scene scene) {
         btnAdd = (Button) scene.lookup("#btnAdd");
         btnRemove = (Button) scene.lookup("#btnRemove");
+        btnRemove.setDisable(true);
         listView = (ListView) scene.lookup("#listView");
         scrollView = (ScrollPane) scene.lookup("#scrollView");
         scrollViewContainer = (AnchorPane) scene.lookup("#scrollViewContrainer");
@@ -66,11 +72,24 @@ public class Main extends Application {
         btnAdd.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Date now = new Date();
-                Object[] arguments = new Object[1];
-                arguments[0] = mm;
-                aem.addAgentToMainContainer(now.toString(), "agents.MovingAgent", arguments);
+                controller.createMovingAgent();
+            }
+        });
+
+        btnRemove.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                controller.removeAgent();
             }
         });
     }
+
+    private void startGuiAgent(AgentsEnvironmentManager aem, MapManager mm, Controller controller) {
+        Object[] guiArgs = new Object[3];
+        guiArgs[0] = aem;
+        guiArgs[1] = mm;
+        guiArgs[2] = controller;
+        aem.addAgentToMainContainer("gui", GUIAgent.class.getName(), guiArgs);
+    }
 }
+

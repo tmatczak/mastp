@@ -24,7 +24,19 @@ public class MovingAgent extends Agent {
                 mm.setMarker(getLocalName(), new LatLong(latitude, longitude));
             }
         });
+        setupBehaviours();
+    }
 
+    private void parseArguments() {
+        Object[] args = getArguments();
+        if (args != null) {
+            mm = (MapManager) args[0];
+//            latitude = (double) args[1];
+//            longitude = (double) args[2];
+        }
+    }
+
+    private void setupBehaviours() {
         addBehaviour(new TickerBehaviour(this, 1000) {
             @Override
             protected void onTick() {
@@ -37,15 +49,6 @@ public class MovingAgent extends Agent {
                 });
             }
         });
-    }
-
-    private void parseArguments() {
-        Object[] args = getArguments();
-        if (args != null) {
-            mm = (MapManager) args[0];
-//            latitude = (double) args[1];
-//            longitude = (double) args[2];
-        }
     }
 
     private void updateCoordinates() {
