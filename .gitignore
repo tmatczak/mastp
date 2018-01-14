@@ -1,6 +1,7 @@
 # Cover only java
 # Compiled class file
 *.class
+TestingPlatform/target/
 
 # Log file
 *.log
