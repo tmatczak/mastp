@@ -3,11 +3,13 @@ package sample;
 import agents.GUIAgent;
 import agents.InformingAgent;
 import jade.gui.GuiAgent;
+import jade.gui.GuiEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import utils.GUIEvent;
 
 import java.net.URL;
 import java.util.Date;
@@ -42,14 +44,14 @@ public class Controller implements Initializable {
     }
 
     public void createInformingAgent() {
-        Date now = new Date();
-        Object[] arguments = new Object[1];
-        arguments[0] = mm;
-        aem.addAgentToMainContainer(now.toString(), InformingAgent.class.getName(), arguments);
+        GuiEvent ge = new GuiEvent(this, GUIEvent.ADD_AGENT);
+        ga.postGuiEvent(ge);
     }
 
     public void removeAgent() {
-        ga.sendKillMessage(listView.getItems().get(listView.getSelectionModel().getSelectedIndex()));
+        GuiEvent ge = new GuiEvent(this, GUIEvent.DELETE_AGENT);
+        ge.addParameter(listView.getItems().get(listView.getSelectionModel().getSelectedIndex()));
+        ga.postGuiEvent(ge);
         btnRemove.setDisable(true);
     }
 

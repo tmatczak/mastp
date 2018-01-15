@@ -15,6 +15,8 @@ import sample.MapManager;
 import utils.GUIEvent;
 import utils.SimpleMessage;
 
+import java.util.Date;
+
 public class GUIAgent extends GuiAgent {
 
     transient protected Controller controller;
@@ -94,8 +96,25 @@ public class GUIAgent extends GuiAgent {
         });
     }
 
+    private void createInformingAgent() {
+        Date now = new Date();
+        Object[] arguments = new Object[1];
+        arguments[0] = mm;
+        aem.addAgentToMainContainer(now.toString(), InformingAgent.class.getName(), arguments);
+    }
+
     @Override
     protected void onGuiEvent(GuiEvent guiEvent) {
+        switch (guiEvent.getType()) {
+            case GUIEvent.ADD_AGENT: {
+                createInformingAgent();
+                break;
+            }
+            case GUIEvent.DELETE_AGENT: {
+                String localname = (String) guiEvent.getParameter(0);
+                sendKillMessage(localname);
+            }
+        }
 
     }
 }
