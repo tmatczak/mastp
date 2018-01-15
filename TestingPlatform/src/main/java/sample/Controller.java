@@ -1,6 +1,7 @@
 package sample;
 
 import agents.GUIAgent;
+import agents.InformingAgent;
 import jade.gui.GuiAgent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -16,13 +17,13 @@ public class Controller implements Initializable {
 
     private AgentsEnvironmentManager aem;
     private MapManager mm;
-    private GuiAgent ga;
+    private GUIAgent ga;
 
     @FXML private SplitPane rootContainer;
     @FXML private HBox mapContainer;
     @FXML private Button btnAdd;
     @FXML private Button btnRemove;
-    @FXML private ListView listView;
+    @FXML private ListView<String> listView;
     @FXML private ScrollPane scrollView;
     @FXML private AnchorPane scrollViewContainer;
 
@@ -40,14 +41,24 @@ public class Controller implements Initializable {
 
     }
 
-    public void createMovingAgent() {
+    public void createInformingAgent() {
         Date now = new Date();
         Object[] arguments = new Object[1];
         arguments[0] = mm;
-        aem.addAgentToMainContainer(now.toString(), "agents.MovingAgent", arguments);
+        aem.addAgentToMainContainer(now.toString(), InformingAgent.class.getName(), arguments);
     }
 
     public void removeAgent() {
-        System.out.println("remove agent");
+        ga.sendKillMessage(listView.getItems().get(listView.getSelectionModel().getSelectedIndex()));
+        btnRemove.setDisable(true);
+    }
+
+    public void addAIDToList(String aid) {
+        listView.getItems().add(aid);
+    }
+
+    public void removeSelectedAIDFromList() {
+        listView.getItems().remove(listView.getSelectionModel().getSelectedIndex());
+        btnRemove.setDisable(false);
     }
 }

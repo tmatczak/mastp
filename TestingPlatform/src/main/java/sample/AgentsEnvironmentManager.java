@@ -4,6 +4,7 @@ import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
 import jade.wrapper.AgentController;
+import jade.wrapper.ControllerException;
 import jade.wrapper.StaleProxyException;
 
 public class AgentsEnvironmentManager {
@@ -37,6 +38,14 @@ public class AgentsEnvironmentManager {
         } catch (StaleProxyException e) {
             System.out.println("Agent not created due to stale proxy exception");
         }
+    }
 
+    public void removeAgent(String localName, jade.wrapper.AgentContainer container) throws ControllerException {
+        AgentController ac = container.getAgent(localName);
+        ac.kill();
+    }
+
+    public void removeAgentFromMainContainer(String localName) throws ControllerException {
+        removeAgent(localName, mainContainer);
     }
 }

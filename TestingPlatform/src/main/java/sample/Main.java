@@ -60,7 +60,6 @@ public class Main extends Application {
     private void setupViews(Scene scene) {
         btnAdd = (Button) scene.lookup("#btnAdd");
         btnRemove = (Button) scene.lookup("#btnRemove");
-        btnRemove.setDisable(true);
         listView = (ListView) scene.lookup("#listView");
         scrollView = (ScrollPane) scene.lookup("#scrollView");
         scrollViewContainer = (AnchorPane) scene.lookup("#scrollViewContrainer");
@@ -72,7 +71,7 @@ public class Main extends Application {
         btnAdd.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                controller.createMovingAgent();
+                controller.createInformingAgent();
             }
         });
 
