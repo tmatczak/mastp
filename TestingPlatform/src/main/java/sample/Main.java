@@ -1,6 +1,6 @@
 package sample;
 
-import agents.GUIAgent;
+import agents.CustomGuiAgent;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -13,6 +13,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import utils.DefaultAgentName;
 
 public class Main extends Application {
 
@@ -84,11 +85,12 @@ public class Main extends Application {
     }
 
     private void startGuiAgent(AgentsEnvironmentManager aem, MapManager mm, Controller controller) {
-        Object[] guiArgs = new Object[3];
-        guiArgs[0] = aem;
-        guiArgs[1] = mm;
-        guiArgs[2] = controller;
-        aem.addAgentToMainContainer("gui", GUIAgent.class.getName(), guiArgs);
+        Object[] guiArgs = {aem, mm, controller};
+//                //new Object[3];
+//        guiArgs[0] = aem;
+//        guiArgs[1] = mm;
+//        guiArgs[2] = controller;
+        aem.addAgentToMainContainer(DefaultAgentName.CUSTOM_GUI_AGENT, CustomGuiAgent.class.getName(), guiArgs);
     }
 }
 

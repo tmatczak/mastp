@@ -9,7 +9,8 @@ import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
 import javafx.application.Platform;
 import sample.MapManager;
-import utils.GUIEvent;
+import utils.CustomGuiEvent;
+import utils.DefaultAgentName;
 import utils.SimpleMessage;
 
 import java.io.IOException;
@@ -43,9 +44,9 @@ public class InformingAgent extends Agent {
             public void action() {
                 try {
                     ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
-                    SimpleMessage sm = new SimpleMessage(this.getAgent().getAID().getLocalName(), GUIEvent.ADD_AGENT);
+                    SimpleMessage sm = new SimpleMessage(this.getAgent().getAID().getLocalName(), CustomGuiEvent.ADD_AGENT);
                     msg.setContentObject(sm);
-                    msg.addReceiver(new AID("gui", AID.ISLOCALNAME));
+                    msg.addReceiver(new AID(DefaultAgentName.CUSTOM_GUI_AGENT, AID.ISLOCALNAME));
                     send(msg);
                 } catch (IOException e) {
                     System.out.println("Exception in InformingAgent");
@@ -75,9 +76,9 @@ public class InformingAgent extends Agent {
                         public void action() {
                             try {
                                 ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
-                                SimpleMessage sm = new SimpleMessage(this.getAgent().getAID().getLocalName(), GUIEvent.DELETE_AGENT);
+                                SimpleMessage sm = new SimpleMessage(this.getAgent().getAID().getLocalName(), CustomGuiEvent.DELETE_AGENT);
                                 msg.setContentObject(sm);
-                                msg.addReceiver(new AID("gui", AID.ISLOCALNAME));
+                                msg.addReceiver(new AID(DefaultAgentName.CUSTOM_GUI_AGENT, AID.ISLOCALNAME));
                                 send(msg);
                                 doDelete();
                             } catch (IOException e) {

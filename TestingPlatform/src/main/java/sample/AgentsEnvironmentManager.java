@@ -6,6 +6,7 @@ import jade.core.Runtime;
 import jade.wrapper.AgentController;
 import jade.wrapper.ControllerException;
 import jade.wrapper.StaleProxyException;
+import utils.DefaultAgentName;
 
 public class AgentsEnvironmentManager {
 
@@ -24,7 +25,7 @@ public class AgentsEnvironmentManager {
     }
 
     public void addRemoteMonitoringAgent() {
-        addAgentToMainContainer("rma", "jade.tools.rma.rma", new Object[0]);
+        addAgentToMainContainer(DefaultAgentName.REMOTE_MONITORING_AGENT, jade.tools.rma.rma.class.getName(), new Object[0]);
     }
 
     public void addAgentToMainContainer(String nickname, String className, Object[] arguments) {

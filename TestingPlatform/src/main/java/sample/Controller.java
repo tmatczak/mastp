@@ -1,25 +1,22 @@
 package sample;
 
-import agents.GUIAgent;
-import agents.InformingAgent;
-import jade.gui.GuiAgent;
+import agents.CustomGuiAgent;
 import jade.gui.GuiEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import utils.GUIEvent;
+import utils.CustomGuiEvent;
 
 import java.net.URL;
-import java.util.Date;
 import java.util.ResourceBundle;
 
 public class Controller implements Initializable {
 
     private AgentsEnvironmentManager aem;
     private MapManager mm;
-    private GUIAgent ga;
+    private CustomGuiAgent cga;
 
     @FXML private SplitPane rootContainer;
     @FXML private HBox mapContainer;
@@ -34,8 +31,8 @@ public class Controller implements Initializable {
         this.mm = mm;
     }
 
-    public void setupGuiAgent(GUIAgent ga) {
-        this.ga = ga;
+    public void setupGuiAgent(CustomGuiAgent cga) {
+        this.cga = cga;
     }
 
     @Override
@@ -44,14 +41,14 @@ public class Controller implements Initializable {
     }
 
     public void createInformingAgent() {
-        GuiEvent ge = new GuiEvent(this, GUIEvent.ADD_AGENT);
-        ga.postGuiEvent(ge);
+        GuiEvent ge = new GuiEvent(this, CustomGuiEvent.ADD_AGENT);
+        cga.postGuiEvent(ge);
     }
 
     public void removeAgent() {
-        GuiEvent ge = new GuiEvent(this, GUIEvent.DELETE_AGENT);
+        GuiEvent ge = new GuiEvent(this, CustomGuiEvent.DELETE_AGENT);
         ge.addParameter(listView.getItems().get(listView.getSelectionModel().getSelectedIndex()));
-        ga.postGuiEvent(ge);
+        cga.postGuiEvent(ge);
         btnRemove.setDisable(true);
     }
 

@@ -1,6 +1,5 @@
 package agents;
 
-import com.lynden.gmapsfx.javascript.object.LatLong;
 import jade.core.AID;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.OneShotBehaviour;
@@ -12,12 +11,12 @@ import javafx.application.Platform;
 import sample.AgentsEnvironmentManager;
 import sample.Controller;
 import sample.MapManager;
-import utils.GUIEvent;
+import utils.CustomGuiEvent;
 import utils.SimpleMessage;
 
 import java.util.Date;
 
-public class GUIAgent extends GuiAgent {
+public class CustomGuiAgent extends GuiAgent {
 
     transient protected Controller controller;
     private AgentsEnvironmentManager aem;
@@ -45,25 +44,27 @@ public class GUIAgent extends GuiAgent {
                 if (msg != null) {
                     try {
                         SimpleMessage sm = (SimpleMessage) msg.getContentObject();
-                        switch (sm.getEvent()) {
-                            case GUIEvent.ADD_AGENT: {
-                                addAIDToList(sm.getAid());
-                                break;
-                            }
-                            case GUIEvent.DELETE_AGENT: {
-                                removeAIDFromList("");
-                                break;
-                            }
-
-                        }
+                        parseMessage(sm);
                     } catch (UnreadableException e) {
                         e.printStackTrace();
                     }
-
                 }
                 block();
             }
         });
+    }
+
+    private void parseMessage(SimpleMessage sm) {
+        switch (sm.getEvent()) {
+            case CustomGuiEvent.ADD_AGENT: {
+                addAIDToList(sm.getAid());
+                break;
+            }
+            case CustomGuiEvent.DELETE_AGENT: {
+                removeAIDFromList();
+                break;
+            }
+        }
     }
 
     private void addAIDToList(String localName) {
@@ -75,7 +76,7 @@ public class GUIAgent extends GuiAgent {
         });
     }
 
-    private void removeAIDFromList(String localName) {
+    private void removeAIDFromList() {
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
@@ -98,21 +99,20 @@ public class GUIAgent extends GuiAgent {
 
     private void createInformingAgent() {
         Date now = new Date();
-        Object[] arguments = new Object[1];
-        arguments[0] = mm;
+        Object[] arguments = { mm };
         aem.addAgentToMainContainer(now.toString(), InformingAgent.class.getName(), arguments);
     }
 
     @Override
     protected void onGuiEvent(GuiEvent guiEvent) {
         switch (guiEvent.getType()) {
-            case GUIEvent.ADD_AGENT: {
+            case CustomGuiEvent.ADD_AGENT: {
                 createInformingAgent();
                 break;
             }
-            case GUIEvent.DELETE_AGENT: {
-                String localname = (String) guiEvent.getParameter(0);
-                sendKillMessage(localname);
+            case CustomGuiEvent.DELETE_AGENT: {
+                String localName = (String) guiEvent.getParameter(0);
+                sendKillMessage(localName);
             }
         }
 
