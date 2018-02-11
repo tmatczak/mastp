@@ -19,8 +19,13 @@ import java.util.concurrent.ThreadLocalRandom;
 public class InformingAgent extends Agent {
 
     private MapManager mm;
-    private double latitude;
-    private double longitude;
+//    private LatLong coordinates;
+//    private LatLong lastCoordinates;
+
+    private double currentLatitude;
+    private double currentLongitude;
+    private double lastLatitude;
+    private double lastLongitude;
     private double step = 0.001;
 
     protected void setup() {
@@ -62,7 +67,10 @@ public class InformingAgent extends Agent {
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-                        mm.setMarker(getLocalName(), new LatLong(latitude, longitude));
+                        LatLong currentCoordinates = new LatLong(currentLatitude, currentLongitude);
+                        LatLong lastCoordinates = new LatLong(lastLatitude, lastLongitude);
+//                        mm.drawDot(currentCoordinates);
+                        mm.drawLine(lastCoordinates, currentCoordinates);
                     }
                 });
             }
@@ -94,15 +102,26 @@ public class InformingAgent extends Agent {
     }
 
     private void updateCoordinates() {
-        this.latitude += getRandomInt(-1, 1) * step;
-        this.longitude += getRandomInt(-1, 1) * step;
+//        lastCoordinates = coordinates;
+//        double latitude = coordinates.getLatitude() + getRandomInt(-1, 1) * step;
+//        double longitude = coordinates.getLongitude() + getRandomInt(-1, 1) * step;
+//        coordinates = new LatLong(latitude, longitude);
+
+        lastLatitude = currentLatitude;
+        lastLongitude = currentLongitude;
+        currentLatitude += getRandomInt(-1, 1) * step;
+        currentLongitude += getRandomInt(-1, 1) * step;
     }
 
     private void setRandomCoordinates() {
+//        int latitudeReminder = getRandomInt(0, 9999);
+//        int longitudeReminder = getRandomInt(0, 9999);
+//        coordinates = new LatLong(52 + (double)latitudeReminder/10000, 21 + (double)longitudeReminder/10000);
+
         int latitudeReminder = getRandomInt(0, 9999);
         int longitudeReminder = getRandomInt(0, 9999);
-        this.latitude = 52 + (double)latitudeReminder/10000;
-        this.longitude = 21 + (double)longitudeReminder/10000;
+        currentLatitude = 52 + (double)latitudeReminder/10000;
+        currentLongitude = 21 + (double)longitudeReminder/10000;
     }
 
     private int getRandomInt(int min, int max) {

@@ -3,6 +3,10 @@ package sample;
 import com.lynden.gmapsfx.GoogleMapView;
 import com.lynden.gmapsfx.MapComponentInitializedListener;
 import com.lynden.gmapsfx.javascript.object.*;
+import com.lynden.gmapsfx.shapes.Circle;
+import com.lynden.gmapsfx.shapes.CircleOptions;
+import com.lynden.gmapsfx.shapes.Polyline;
+import com.lynden.gmapsfx.shapes.PolylineOptions;
 
 import java.util.Locale;
 
@@ -46,5 +50,31 @@ public class MapManager implements MapComponentInitializedListener{
 
         Marker marker = new Marker( markerOptions );
         googleMap.addMarker(marker);
+    }
+
+    public void drawDot(LatLong coordinates) {
+        CircleOptions cOpts = new CircleOptions()
+                .center(coordinates)
+                .radius(50)
+                .strokeColor("orange")
+                .strokeWeight(2)
+                .fillColor("orange")
+                .fillOpacity(1);
+
+        Circle c = new Circle(cOpts);
+        googleMap.addMapShape(c);
+    }
+
+    public void drawLine(LatLong start, LatLong end) {
+        LatLong[] ary = new LatLong[]{ start, end};
+        MVCArray mvc = new MVCArray(ary);
+
+        PolylineOptions polyOpts = new PolylineOptions()
+                .path(mvc)
+                .strokeColor("red")
+                .strokeWeight(2);
+
+        Polyline poly = new Polyline(polyOpts);
+        googleMap.addMapShape(poly);
     }
 }
