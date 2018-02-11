@@ -65,13 +65,13 @@ public class MapManager implements MapComponentInitializedListener{
         googleMap.addMapShape(c);
     }
 
-    public void drawLine(LatLong start, LatLong end) {
+    public void drawLine(LatLong start, LatLong end, String color) {
         LatLong[] ary = new LatLong[]{ start, end};
         MVCArray mvc = new MVCArray(ary);
 
         PolylineOptions polyOpts = new PolylineOptions()
                 .path(mvc)
-                .strokeColor("red")
+                .strokeColor(color)
                 .strokeWeight(2);
 
         Polyline poly = new Polyline(polyOpts);

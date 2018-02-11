@@ -9,6 +9,7 @@ import jade.core.behaviours.TickerBehaviour;
 import jade.lang.acl.ACLMessage;
 import javafx.application.Platform;
 import sample.MapManager;
+import utils.Coordinate;
 import utils.CustomGuiEvent;
 import utils.DefaultAgentName;
 import utils.SimpleMessage;
@@ -16,21 +17,25 @@ import utils.SimpleMessage;
 import java.io.IOException;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class InformingAgent extends Agent {
+public class DestinationAgent extends Agent {
+
+    static private String RED = "red";
+    static private String GREEN = "green";
 
     private MapManager mm;
-//    private LatLong coordinates;
-//    private LatLong lastCoordinates;
 
-    private double currentLatitude;
-    private double currentLongitude;
-    private double lastLatitude;
-    private double lastLongitude;
-    private double step = 0.001;
+    private Coordinate current;
+    private Coordinate last;
+    private Coordinate start;
+    private Coordinate finish;
+    private double step = 0.01;
+    private String currentColor = GREEN;
 
     protected void setup() {
         parseArguments();
-        setRandomCoordinates();
+        start = generateRandomCoordinates();
+        finish = generateRandomCoordinates();
+        current = start;
         setupBehaviours();
     }
 
@@ -64,13 +69,20 @@ public class InformingAgent extends Agent {
             @Override
             protected void onTick() {
                 updateCoordinates();
+                System.out.println();
+                System.out.println("Current: " + current.latitude + ", " + current.longitude);
+                if (isDestinationReached()) {
+                    System.out.println("YEAH!!!");
+                    switchDestinations();
+                    currentColor = currentColor.equals(RED) ? GREEN : RED;
+                }
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-                        LatLong currentCoordinates = new LatLong(currentLatitude, currentLongitude);
-                        LatLong lastCoordinates = new LatLong(lastLatitude, lastLongitude);
+                        LatLong currentCoordinates = new LatLong(current.latitude, current.longitude);
+                        LatLong lastCoordinates = new LatLong(last.latitude, last.longitude);
 //                        mm.drawDot(currentCoordinates);
-                        mm.drawLine(lastCoordinates, currentCoordinates, "red");
+                        mm.drawLine(lastCoordinates, currentCoordinates, currentColor);
                     }
                 });
             }
@@ -101,30 +113,39 @@ public class InformingAgent extends Agent {
 
     }
 
-    private void updateCoordinates() {
-//        lastCoordinates = coordinates;
-//        double latitude = coordinates.getLatitude() + getRandomInt(-1, 1) * step;
-//        double longitude = coordinates.getLongitude() + getRandomInt(-1, 1) * step;
-//        coordinates = new LatLong(latitude, longitude);
-
-        lastLatitude = currentLatitude;
-        lastLongitude = currentLongitude;
-        currentLatitude += getRandomInt(-1, 1) * step;
-        currentLongitude += getRandomInt(-1, 1) * step;
+    private boolean isDestinationReached() {
+        System.out.println("Destination is at " + finish.latitude + ", " + finish.longitude);
+        return distance(finish, current) < step;
     }
 
-    private void setRandomCoordinates() {
-//        int latitudeReminder = getRandomInt(0, 9999);
-//        int longitudeReminder = getRandomInt(0, 9999);
-//        coordinates = new LatLong(52 + (double)latitudeReminder/10000, 21 + (double)longitudeReminder/10000);
 
+
+    private void switchDestinations() {
+        Coordinate temp = start;
+        start = finish;
+        finish = temp;
+    }
+
+    private void updateCoordinates() {
+        last = current;
+        double stepsCount = distance(finish, start) / step;
+        double latitudeStep = (finish.latitude - start.latitude) / stepsCount;
+        double longitudeStep = (finish.longitude - start.longitude) / stepsCount;
+        current = new Coordinate(current.latitude + latitudeStep, current.longitude + longitudeStep);
+    }
+
+    private Coordinate generateRandomCoordinates() {
         int latitudeReminder = getRandomInt(0, 9999);
         int longitudeReminder = getRandomInt(0, 9999);
-        currentLatitude = 52 + (double)latitudeReminder/10000;
-        currentLongitude = 21 + (double)longitudeReminder/10000;
+        return new Coordinate(52 + (double)latitudeReminder/10000, 21 + (double)longitudeReminder/10000);
     }
 
     private int getRandomInt(int min, int max) {
         return ThreadLocalRandom.current().nextInt(min, max + 1);
     }
+
+    private double distance(Coordinate point1, Coordinate point2) {
+        return Math.sqrt(Math.pow(point1.latitude - point2.latitude, 2) + Math.pow(point1.longitude - point2.longitude, 2));
+    }
 }
+
