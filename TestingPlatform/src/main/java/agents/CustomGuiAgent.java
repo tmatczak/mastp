@@ -97,17 +97,17 @@ public class CustomGuiAgent extends GuiAgent {
         });
     }
 
-    private void createDestinationAgent() {
+    private void createMulitDestinationAgent() {
         Date now = new Date();
         Object[] arguments = { mm };
-        aem.addAgentToMainContainer(now.toString(), DestinationAgent.class.getName(), arguments);
+        aem.addAgentToMainContainer(now.toString(), MultiDestinationAgent.class.getName(), arguments);
     }
 
     @Override
     protected void onGuiEvent(GuiEvent guiEvent) {
         switch (guiEvent.getType()) {
             case CustomGuiEvent.ADD_AGENT: {
-                createDestinationAgent();
+                createMulitDestinationAgent();
                 break;
             }
             case CustomGuiEvent.DELETE_AGENT: {
